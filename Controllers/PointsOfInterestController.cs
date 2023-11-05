@@ -1,6 +1,9 @@
 
+using System.ComponentModel;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 [Route("api/cities/{cityId}/pointsofinterest")]
 [ApiController]
@@ -99,5 +102,52 @@ public class PointsOfInterestController : ControllerBase
 
       return NoContent();
 
+    }
+
+    [HttpPatch("{pointofinterestid}")]
+    public ActionResult  PartiallyUpdatePointOfInterest(int cityId, int pOfInterestId,
+    [FromBody] JsonPatchDocument<PointOfInterestUpdateDto> patchDocument )
+    {
+       //check the city exists
+      var city = CitiesDataStore.Current.Cities.FirstOrDefault(city => city.Id == cityId);
+
+      if (city == null)
+      {
+         return NotFound();
+      }
+
+      //find point of interest
+      var pointOfInterestFound = city.PointsOfInterest.FirstOrDefault(pInterest => pInterest.Id == pOfInterestId);
+
+      if (pointOfInterestFound == null)
+      {
+         return NotFound();
+      }
+
+      var pointOfInterestToPatch = new PointOfInterestUpdateDto()
+      {
+         Name = pointOfInterestFound.Name,
+         Description = pointOfInterestFound.Description
+      };
+
+      patchDocument.ApplyTo<PointOfInterestUpdateDto>(pointOfInterestToPatch, ModelState);
+
+      //check that the incoming patchDocumnet request is valid
+      if (!ModelState.IsValid)
+      {
+         return BadRequest(ModelState);
+      }
+
+      //check that the updated pointOfInterestToPatch is valid
+      if (!TryValidateModel(pointOfInterestToPatch))
+      {
+         return BadRequest(ModelState);
+      }
+
+     pointOfInterestFound.Name = pointOfInterestToPatch.Name;
+     pointOfInterestFound.Description = pointOfInterestToPatch.Description;
+
+
+      return NoContent();
     }
 }
