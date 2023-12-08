@@ -9,17 +9,38 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 [ApiController]
 public class PointsOfInterestController : ControllerBase
 {
+   private readonly ILogger<PointsOfInterestController> _logger;
+
+   //constructor injectors
+   public PointsOfInterestController( ILogger<PointsOfInterestController> logger)
+   {
+      _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+   }
+
     [HttpGet]
     public ActionResult<IEnumerable<PointOfInterestDto>> GetPointsOfInterest(int cityId)
     {
-       var cityFound = CitiesDataStore.Current.Cities.FirstOrDefault(city => city.Id == cityId);
+      try{
+          //test expection secnario
+          //throw new Exception("Sample exception");
 
-       if (cityFound == null)
-       {
-          return NotFound();
-       }
+         var cityFound = CitiesDataStore.Current.Cities.FirstOrDefault(city => city.Id == cityId);
 
-       return Ok(cityFound.PointsOfInterest);
+         if (cityFound == null)
+         {
+            _logger.LogInformation($"City with given {cityId} id was not found whne requesting points of interest");
+            return NotFound();
+         }
+
+         return Ok(cityFound.PointsOfInterest);
+      }
+      catch(Exception ex)
+      {
+         _logger.LogCritical("Exception occured while accessing points of interest", ex);
+
+         return StatusCode(500, "Error happened while handling request");
+      }
+       
     }
 
      [HttpGet("{pointOfInterestId}", Name = "GetPointOfInterest")]
