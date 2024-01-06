@@ -10,6 +10,12 @@
     <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="7.0.13" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.13" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.1" />
+    <PackageReference Include="microsoft.entityframeworkcore" Version="6.0.0" />
+    <PackageReference Include="microsoft.entityframeworkcore.sqlite" Version="6.0.0" />
+    <PackageReference Include="microsoft.entityframeworkcore.tools" Version="6.0.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Serilog.AspNetCore" Version="8.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
