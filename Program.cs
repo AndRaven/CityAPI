@@ -18,8 +18,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
 builder.Services.AddSingleton<CitiesDataStore>();
-builder.Services.AddDbContext <CityInfoContext>(dbContextOptions => dbContextOptions.UseSqlite("Data Source=CityInfoa.db"));
+builder.Services.AddDbContext <CityInfoContext>(dbContextOptions => dbContextOptions.UseSqlite(builder.Configuration.GetConnectionString("CityInfoConnection")));
 
+builder.Services.AddScoped<ICityInfoRepository, CityInfoRepository>();
 
 var app = builder.Build();
 
