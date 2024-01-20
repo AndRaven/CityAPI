@@ -2,11 +2,11 @@
 using System.Data;
 using Microsoft.EntityFrameworkCore;
 
-public class CityInfoReopository : ICityInfoRepository
+public class CityInfoRepository : ICityInfoRepository
 {
     private CityInfoContext _context;
 
-    public CityInfoContext(CityInfoContext context)
+    public CityInfoRepository(CityInfoContext context)
     {
        _context = context ?? throw new ArgumentNullException(nameof(context));
     }
