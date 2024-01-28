@@ -22,12 +22,14 @@ public class CityInfoRepository : ICityInfoRepository
     }
 
     
-    public async Task<IEnumerable<City>> GetCitiesAsync(string? name, string? searchQuery)
+    public async Task<IEnumerable<City>> GetCitiesAsync(string? name, string? searchQuery, int pageNumber, int pageSize)
     {
-       if (string.IsNullOrEmpty(name) &&
-           string.IsNullOrEmpty(searchQuery))
-          return await _context.Cities.OrderBy(c => c.Name).ToListAsync();
+    //    if (string.IsNullOrEmpty(name) &&
+    //        string.IsNullOrEmpty(searchQuery))
+    //       return await _context.Cities.OrderBy(c => c.Name).ToListAsync();
 
+        //using IQueryable to take advantage of deferred execution so that the searching and filtering is done at database level
+        //not on the collecion in memory
         var collection = _context.Cities as IQueryable<City>;
 
         if (!string.IsNullOrWhiteSpace(name))
@@ -42,7 +44,11 @@ public class CityInfoRepository : ICityInfoRepository
                                           (c.Description != null && c.Description.Contains(searchQuery)));
         }
        
-        return await collection.OrderBy(c => c.Name).ToListAsync();
+       //query is sent to the database only at the end when the ToListAsync () is called
+        return await collection.OrderBy(c => c.Name)
+        .Skip(pageSize * (pageNumber - 1))
+        .Take(pageSize)
+        .ToListAsync();
     }
     
 
