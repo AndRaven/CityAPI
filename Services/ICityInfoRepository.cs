@@ -2,7 +2,7 @@ public interface ICityInfoRepository
 {
     Task<IEnumerable<City>> GetCitiesAsync();
 
-    Task<IEnumerable<City>> GetCitiesAsync(string? name, string? searchQuery, int pageNumber, int pageSize);
+    Task<(IEnumerable<City>, PaginationMetadata)> GetCitiesAsync(string? name, string? searchQuery, int pageNumber, int pageSize);
 
     //make the return object nullable as the city could be missing
     Task<City?> GetCityAsync(int cityId, bool includePointsOfInterest = false);

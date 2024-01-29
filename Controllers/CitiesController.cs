@@ -1,3 +1,4 @@
+using System.Text.Json;
 using AutoMapper;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -28,8 +29,11 @@ public class CitiesController : ControllerBase
         {
             pageSize = maxCitiesPageSize;
         }
-        var entityCities = await _cityInfoRepository.GetCitiesAsync(name, searchQuery, pageNumber, pageSize);
 
+        var (entityCities, paginationMetadata) = await _cityInfoRepository.GetCitiesAsync(name, searchQuery, pageNumber, pageSize);
+
+        Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
+        
         return  Ok(_mapper.Map<IEnumerable<CityWithoutPointsOfInterestDto>>(entityCities));
     }
 
