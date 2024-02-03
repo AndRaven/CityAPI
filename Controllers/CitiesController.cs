@@ -1,5 +1,6 @@
 using System.Text.Json;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +8,8 @@ namespace CityAPI.Controllers;
 
 [ApiController]
 [Route("api/cities")]
+
+[Authorize]
 public class CitiesController : ControllerBase
 {
 

@@ -1,12 +1,14 @@
 
 using System.ComponentModel;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 [Route("api/cities/{cityId}/pointsofinterest")]
+[Authorize]
 [ApiController]
 public class PointsOfInterestController : ControllerBase
 {
