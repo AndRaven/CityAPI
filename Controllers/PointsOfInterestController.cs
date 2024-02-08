@@ -8,8 +8,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 [Route("api/cities/{cityId}/pointsofinterest")]
-[Authorize]
+//[Authorize]
 [ApiController]
+[ApiVersion("1.0")]
+
 public class PointsOfInterestController : ControllerBase
 {
    private readonly ILogger<PointsOfInterestController> _logger;
