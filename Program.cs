@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +18,14 @@ builder.Services.AddControllers( options =>
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen( setupAction =>
+{
+    var xmlCommentsFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlFilePath = Path.Combine(AppContext.BaseDirectory, xmlCommentsFile);
+
+    setupAction.IncludeXmlComments(xmlFilePath);
+});
+
 builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
 builder.Services.AddSingleton<CitiesDataStore>();
 builder.Services.AddDbContext <CityInfoContext>(dbContextOptions => dbContextOptions.UseSqlite(builder.Configuration.GetConnectionString("CityInfoDBConnectionString")));
